@@ -1,3 +1,5 @@
+require 'set'
+
 def read_rucksacks(input)
   File.readlines(input).map do |line|
     # split each line in half

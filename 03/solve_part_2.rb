@@ -8,6 +8,8 @@ def read_rucksacks(input)
   end
 end
 
+require 'set'
+
 def group_rucksacks(rucksacks)
   rucksacks.each_slice(3).to_a
 end
