@@ -2,12 +2,13 @@ def read_rucksacks(input)
   File.readlines(input).map do |line|
     # split each line in half
     line = line.strip
-    left, right = line[0..line.size / 2 -1], line[line.size / 2 ..-1]
-    [left, right].map { |side| side.split('').to_set }
+    chars = line.chars
+    left, right = chars.take(chars.size / 2), chars.drop(chars.size / 2)
+    [left, right].map { |side| side.to_set }
   end
 end
 
-def common_items(rucksacks)
+def items_common_to_compartments(rucksacks)
   rucksacks.map { |rucksack| rucksack[0] & rucksack[1] }
 end
 
@@ -27,7 +28,11 @@ def item_to_priority(letter)
   end
 end
 
-rucksacks = read_rucksacks('input.txt')
-common_items = common_items(rucksacks)
-priorities = common_items.map { |item| item_to_priority(item.first) }
-puts priorities.sum
+def main
+  rucksacks = read_rucksacks('input.txt')
+  common = items_common_to_compartments(rucksacks)
+  priorities = common.map { |item| item_to_priority(item.first) }
+  priorities.sum
+end
+
+puts main
