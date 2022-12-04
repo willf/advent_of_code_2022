@@ -4,7 +4,7 @@ module AllenAlgebra
   end
 
   def meets?(other)
-    self.end + 1 == other.first
+    self.end == other.first
   end
 
   def overlaps?(other)
@@ -44,7 +44,7 @@ module AllenAlgebra
   end
 
   def met_by?(other)
-    self.first == other.end + 1
+    self.first == other.end
   end
 
   def preceded_by?(other)
