@@ -1,33 +1,31 @@
 # First, we read all lines that have `/\[.*\]/` in them.
-# removing the brackets, we get the list of crates.
-
 def lines_with_crates(input)
   File.readlines(input).select { |line| line =~ /\[.*\]/ }
 end
 
-# next, we pad the crates with spaces, so that have the same length.
-# this is necessary, because we want to align the crates in the output.
-
-def pad_crates(crates)
-  max_length = crates.map(&:length).max
-  crates.map { |crate| crate.ljust(max_length) }
+# This was literally the hardest part of the puzzle for me !! :)
+# We will get rid of the extra spaces and brackets
+# and convert 'blank' crates to `x`
+# The secret is that the crates are 4 characters wide
+# and the second character is the one we want
+def convert_line(line)
+  line.chomp.chars.each_slice(4).map{|x| x[1]}.join.gsub(/ /, 'x')
 end
 
-# replace double spaces with ' x' and then remove the spaces.
-# this is necessary, because we want to align the crates in the output.
-
-def replace_double_spaces_with_x_and_remove_spaces(crates)
-  crates.map do |crate|
-    crate.gsub('  ', ' x').gsub(' ', '').gsub(/\n/, '').gsub(/\[/, '').gsub(/\]/, '').gsub('xx', 'x')
-  end
+# We will convert all lines to the same length by adding `x` to the end
+def convert_lines(lines)
+  converted = lines.map { |line| convert_line(line) }
+  max_length = converted.map(&:length).max
+  converted.map { |line| line.ljust(max_length, 'x') }
 end
 
+# And traspose the lines to get the stacks
 def transpose_crates(crates)
   crates.map(&:chars).transpose.map(&:join)
 end
 
 def read_stacks(input)
-  transpose_crates(replace_double_spaces_with_x_and_remove_spaces(pad_crates(lines_with_crates(input))))
+  transpose_crates(convert_lines(lines_with_crates(input)))
 end
 
 def create_stack_from_text(text)
@@ -67,7 +65,12 @@ end
 
 def make_move_2(move, stacks)
   count, from, to = move
-  stacks[to] << stacks[from].pop(count)
+  # take the top count elements from the from stack and push them to the to stack
+  x = []
+  count.times do
+    x << stacks[from].pop
+  end
+  stacks[to] += x.reverse
 end
 
 def move_all_9000(stacks, moves)
@@ -98,7 +101,9 @@ def solve_part_2(input)
   s.map { |stack| stack.last }.join
 end
 
-def main(_input)
+def main()
   puts solve_part_1('input.txt')
   puts solve_part_2('input.txt')
 end
+
+main
