@@ -1,4 +1,4 @@
-# a 'directory' has a name and a list of files and $directories
+# a 'directory' has a name and a list of files and directories
 # a 'file' has a name and a size
 
 class SimDirectory
@@ -29,7 +29,6 @@ $directories = []
 inputs = File.read('input.txt').split("\n")
 puts "Starting with $current directory is #{$current.name}"
 inputs.each do |input|
-  puts "Processing input: #{input}"
   if input =~ /\$ cd (.*)/
     name = $1
     if name == ".."
@@ -46,11 +45,9 @@ inputs.each do |input|
         $directories << dir unless $directories.include?(dir) || dir == $root
         puts "Added new directory #{name}"
       end
-      puts "before change, current directory is #{$current.name}"
       $current = dir
-      puts "current directory is now #{$current.name}"
     end
-    puts "$current directory is #{$current.name}"
+    puts "Set current directory to #{$current.name}"
   elsif input =~ /\$ ls/
     # do nothing :)
   elsif input =~ /dir (.*)/
@@ -63,7 +60,7 @@ inputs.each do |input|
       $directories << newDirectory
       puts "Added new directory #{name}"
     else
-      puts "#{name} Directory already exists"
+      puts "Directory #{name} already exists"
     end
   elsif input =~ /(\d+) (.*)/
     name = $2
@@ -74,7 +71,7 @@ inputs.each do |input|
       $current.files << newFile
       puts "Added new file #{name} with size #{size} to #{$current.name}"
     else
-      puts "#{name} File already exists"
+      puts "File #{name} already exists"
     end
 else
   puts "Unrecognized input: #{input}"
@@ -87,6 +84,7 @@ end
 
 # Find all of the directories with a total size of at most 100000. What is the sum of the total sizes of those directories?
 puts "Part 1"
+puts "Find all of the directories with a total size of at most 100000. What is the sum of the total sizes of those directories?"
 puts $directories.map{ |directory| directory.size }.filter{ |size| size <= 100000 }.sum
 
 $total_space = 70000000
@@ -96,6 +94,7 @@ $unused = $total_space - $du
 $required = $total_required - $unused
 
 puts "Part 2"
+puts "Find the smallest directory that can be created to meet the requirements."
 puts "Total space: #{$total_space}"
 puts "Total required: #{$total_required}"
 puts "Total used: #{$du}"
