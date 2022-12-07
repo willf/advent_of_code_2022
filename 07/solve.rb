@@ -41,8 +41,7 @@ inputs.each do |input|
         dir = SimDirectory.new(name)
         dir.parent = $current
         $current.files << dir
-
-        $directories << dir unless $directories.include?(dir) || dir == $root
+        $directories << dir
         puts "Added new directory #{name}"
       end
       $current = dir
@@ -54,10 +53,10 @@ inputs.each do |input|
     name = $1
     found = $current.files.find { |file| file.name == name }
     if found.nil?
-      newDirectory = SimDirectory.new(name)
-      newDirectory.parent = $current
-      $current.files << newDirectory
-      $directories << newDirectory
+      dir = SimDirectory.new(name)
+      dir.parent = $current
+      $current.files << dir
+      $directories << dir
       puts "Added new directory #{name}"
     else
       puts "Directory #{name} already exists"
@@ -67,8 +66,8 @@ inputs.each do |input|
     size = $1.to_i
     found = $current.files.find { |file| file.name == name }
     if found.nil?
-      newFile = SimFile.new(name, size)
-      $current.files << newFile
+      file = SimFile.new(name, size)
+      $current.files << file
       puts "Added new file #{name} with size #{size} to #{$current.name}"
     else
       puts "File #{name} already exists"
@@ -77,10 +76,6 @@ else
   puts "Unrecognized input: #{input}"
 end
 end
-
-#puts $directories.map { |directory| [directory.name, directory.size, directory.files.size] }.inspect
-#puts $directories.map{ |directory| directory.size }.sum
-#puts $directories.map{ |directory| directory.size }.filter{ |size| size <= 1000000 }.sum
 
 # Find all of the directories with a total size of at most 100000. What is the sum of the total sizes of those directories?
 puts "Part 1"
@@ -94,7 +89,7 @@ $unused = $total_space - $du
 $required = $total_required - $unused
 
 puts "Part 2"
-puts "Find the smallest directory that can be created to meet the requirements."
+puts "Find the smallest directory that can be deleted and still meet the requirements."
 puts "Total space: #{$total_space}"
 puts "Total required: #{$total_required}"
 puts "Total used: #{$du}"
